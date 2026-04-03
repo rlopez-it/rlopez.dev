@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ruben Lopez — IT Systems Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #0a0a0a;
+    --white: #f5f4f0;
+    --gray-1: #1a1a1a;
+    --gray-2: #2a2a2a;
+    --gray-3: #444;
+    --gray-4: #888;
+    --gray-5: #bbb;
+    --accent: #e8f040;
+    --accent-dim: #c4cc2a;
+    --okta: #007dc1;
+    --gws: #34a853;
+    --jamf: #e8734a;
+    --mono: 'DM Mono', monospace;
+    --sans: 'DM Sans', sans-serif;
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    position: fixed;
+    width: 8px; height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.15s var(--ease), opacity 0.3s;
+    transform: translate(-50%, -50%);
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 32px; height: 32px;
+    border: 1px solid rgba(232,240,64,0.4);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s var(--ease), height 0.3s var(--ease), border-color 0.3s;
+  }
+  body:has(a:hover) .cursor-ring,
+  body:has(button:hover) .cursor-ring {
+    width: 48px; height: 48px;
+    border-color: rgba(232,240,64,0.7);
+  }
+
+  /* Nav */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 3rem;
+    background: rgba(10,10,10,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .nav-logo {
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--gray-4);
+    text-decoration: none;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--white); }
+
+  /* Hero */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 8rem 3rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black, transparent);
+  }
+
+  .hero-content {
+    max-width: 900px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-tag {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    opacity: 0;
+    animation: fadeUp 0.8s var(--ease) 0.2s forwards;
+  }
+
+  .hero-tag::before {
+    content: '';
+    display: block;
+    width: 32px; height: 1px;
+    background: var(--accent);
+  }
+
+  h1 {
+    font-family: var(--sans);
+    font-size: clamp(3rem, 8vw, 6.5rem);
+    font-weight: 300;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s var(--ease) 0.4s forwards;
+  }
+
+  h1 em {
+    font-style: normal;
+    color: var(--accent);
+  }
+
+  .hero-sub {
+    font-size: 1.1rem;
+    color: var(--gray-4);
+    font-weight: 300;
+    max-width: 520px;
+    line-height: 1.7;
+    margin-bottom: 3rem;
+    opacity: 0;
+    animation: fadeUp 0.8s var(--ease) 0.6s forwards;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 0.8s var(--ease) 0.8s forwards;
+  }
+
+  .btn {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.85rem 1.75rem;
+    border-radius: 2px;
+    text-decoration: none;
+    transition: all 0.2s var(--ease);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: none;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: var(--black);
+    border: 1px solid var(--accent);
+    font-weight: 500;
+  }
+  .btn-primary:hover {
+    background: transparent;
+    color: var(--accent);
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--gray-4);
+    border: 1px solid var(--gray-2);
+  }
+  .btn-ghost:hover {
+    border-color: var(--gray-3);
+    color: var(--white);
+  }
+
+  .hero-status {
+    position: absolute;
+    right: 3rem;
+    bottom: 3rem;
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--gray-3);
+    text-align: right;
+    opacity: 0;
+    animation: fadeUp 0.8s var(--ease) 1s forwards;
+  }
+
+  .status-dot {
+    display: inline-block;
+    width: 6px; height: 6px;
+    background: #4ade80;
+    border-radius: 50%;
+    margin-right: 0.4rem;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* Sections */
+  section {
+    padding: 6rem 3rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--accent);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 3rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--gray-2);
+    max-width: 200px;
+  }
+
+  /* Stack section */
+  .stack-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--gray-2);
+    border: 1px solid var(--gray-2);
+    margin-top: 1rem;
+  }
+
+  .stack-card {
+    background: var(--gray-1);
+    padding: 2.5rem;
+    transition: background 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stack-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .stack-card.okta::before { background: var(--okta); }
+  .stack-card.gws::before { background: var(--gws); }
+  .stack-card.jamf::before { background: var(--jamf); }
+
+  .stack-card:hover { background: var(--gray-2); }
+  .stack-card:hover::before { opacity: 1; }
+
+  .stack-icon {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 1.25rem;
+    padding: 0.3rem 0.6rem;
+    border-radius: 2px;
+    display: inline-block;
+  }
+
+  .okta .stack-icon { color: var(--okta); background: rgba(0,125,193,0.1); }
+  .gws .stack-icon { color: var(--gws); background: rgba(52,168,83,0.1); }
+  .jamf .stack-icon { color: var(--jamf); background: rgba(232,115,74,0.1); }
+
+  .stack-card h3 {
+    font-size: 1.4rem;
+    font-weight: 400;
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.02em;
+  }
+
+  .stack-card p {
+    font-size: 0.9rem;
+    color: var(--gray-4);
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+  }
+
+  .stack-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .tag {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--gray-3);
+    border: 1px solid var(--gray-2);
+    padding: 0.2rem 0.5rem;
+    border-radius: 2px;
+    letter-spacing: 0.05em;
+    transition: all 0.2s;
+  }
+  .stack-card:hover .tag {
+    border-color: var(--gray-3);
+    color: var(--gray-5);
+  }
+
+  /* Projects */
+  .project-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    background: var(--gray-2);
+    border: 1px solid var(--gray-2);
+  }
+
+  .project-item {
+    background: var(--gray-1);
+    padding: 2rem 2.5rem;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 2rem;
+    align-items: start;
+    transition: background 0.2s;
+    cursor: none;
+  }
+
+  .project-item:hover { background: var(--gray-2); }
+
+  .project-num {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--gray-3);
+    margin-bottom: 0.5rem;
+  }
+
+  .project-item h3 {
+    font-size: 1.1rem;
+    font-weight: 400;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.01em;
+  }
+
+  .project-item p {
+    font-size: 0.875rem;
+    color: var(--gray-4);
+    max-width: 560px;
+    line-height: 1.7;
+  }
+
+  .project-badge {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.7rem;
+    border-radius: 2px;
+    white-space: nowrap;
+    margin-top: 0.25rem;
+  }
+
+  .badge-live { background: rgba(74,222,128,0.1); color: #4ade80; }
+  .badge-building { background: rgba(232,240,64,0.1); color: var(--accent); }
+  .badge-planned { background: rgba(136,136,136,0.1); color: var(--gray-4); }
+
+  /* Experience timeline */
+  .timeline {
+    position: relative;
+    padding-left: 2rem;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0.5rem; bottom: 0;
+    width: 1px;
+    background: var(--gray-2);
+  }
+
+  .timeline-item {
+    position: relative;
+    padding-bottom: 3rem;
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: opacity 0.6s var(--ease), transform 0.6s var(--ease);
+  }
+
+  .timeline-item.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -2rem;
+    top: 0.45rem;
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--gray-3);
+    border: 1px solid var(--gray-2);
+    transform: translateX(-3px);
+  }
+
+  .timeline-item:first-child::before {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .timeline-date {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--gray-3);
+    letter-spacing: 0.08em;
+    margin-bottom: 0.4rem;
+  }
+
+  .timeline-item h3 {
+    font-size: 1.05rem;
+    font-weight: 400;
+    margin-bottom: 0.15rem;
+  }
+
+  .timeline-company {
+    font-size: 0.85rem;
+    color: var(--gray-4);
+    margin-bottom: 0.75rem;
+  }
+
+  .timeline-item ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .timeline-item li {
+    font-size: 0.875rem;
+    color: var(--gray-4);
+    padding-left: 1rem;
+    position: relative;
+    line-height: 1.6;
+  }
+
+  .timeline-item li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--gray-3);
+    font-family: var(--mono);
+  }
+
+  /* Contact */
+  .contact-section {
+    border-top: 1px solid var(--gray-2);
+    padding-top: 6rem;
+    padding-bottom: 6rem;
+  }
+
+  .contact-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+
+  .contact-inner h2 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 300;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 1rem;
+  }
+
+  .contact-inner h2 em {
+    font-style: normal;
+    color: var(--accent);
+  }
+
+  .contact-inner p {
+    color: var(--gray-4);
+    font-size: 0.9rem;
+    line-height: 1.7;
+  }
+
+  .contact-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 2rem;
+  }
+
+  .contact-link {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem 1.5rem;
+    border: 1px solid var(--gray-2);
+    text-decoration: none;
+    color: var(--white);
+    font-size: 0.875rem;
+    transition: all 0.2s;
+    cursor: none;
+  }
+
+  .contact-link:hover {
+    border-color: var(--gray-3);
+    background: var(--gray-1);
+  }
+
+  .contact-link-label {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--gray-3);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-right: auto;
+  }
+
+  .contact-link-arrow {
+    font-size: 0.75rem;
+    color: var(--gray-3);
+    transition: transform 0.2s, color 0.2s;
+  }
+  .contact-link:hover .contact-link-arrow {
+    transform: translateX(4px);
+    color: var(--accent);
+  }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid var(--gray-2);
+    padding: 2rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 100%;
+  }
+
+  footer p {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--gray-3);
+    letter-spacing: 0.05em;
+  }
+
+  /* Animations */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Mobile */
+  @media (max-width: 768px) {
+    nav { padding: 1.25rem 1.5rem; }
+    .nav-links { gap: 1.5rem; }
+    .hero { padding: 7rem 1.5rem 3rem; }
+    section { padding: 4rem 1.5rem; }
+    .stack-grid { grid-template-columns: 1fr; }
+    .contact-inner { grid-template-columns: 1fr; gap: 2rem; }
+    footer { padding: 1.5rem; flex-direction: column; gap: 0.5rem; text-align: center; }
+    body { cursor: auto; }
+    .cursor, .cursor-ring { display: none; }
+    .hero-status { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<nav>
+  <a href="#" class="nav-logo">rl@rlopez.dev</a>
+  <ul class="nav-links">
+    <li><a href="#stack">Stack</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-tag">IT Systems Engineer · Chicago, IL</div>
+    <h1>Ruben<br><em>Lopez</em></h1>
+    <p class="hero-sub">
+      Specializing in Mac fleet management, identity & access, and cloud productivity platforms. Currently building hands-on expertise in Jamf Pro, Okta, and Google Workspace.
+    </p>
+    <div class="hero-actions">
+      <a href="#projects" class="btn btn-primary">View my work →</a>
+      <a href="#contact" class="btn btn-ghost">Get in touch</a>
+    </div>
+  </div>
+  <div class="hero-status">
+    <span class="status-dot"></span>Available for new roles<br>
+    <span style="margin-top:0.25rem;display:block;">rlopez.dev · Chicago</span>
+  </div>
+</div>
+
+<!-- Stack -->
+<section id="stack">
+  <div class="section-label">Core stack</div>
+  <div class="stack-grid reveal">
+
+    <div class="stack-card okta">
+      <span class="stack-icon">Okta</span>
+      <h3>Identity &<br>Access</h3>
+      <p>Configuring SSO, MFA policies, lifecycle management, and SCIM provisioning across cloud applications.</p>
+      <div class="stack-tags">
+        <span class="tag">SSO</span>
+        <span class="tag">SCIM</span>
+        <span class="tag">MFA</span>
+        <span class="tag">App catalog</span>
+        <span class="tag">Groups</span>
+        <span class="tag">Lifecycle mgmt</span>
+      </div>
+    </div>
+
+    <div class="stack-card gws">
+      <span class="stack-icon">Google Workspace</span>
+      <h3>Cloud<br>Productivity</h3>
+      <p>Administering Google Workspace tenants — org units, user provisioning, Drive policies, and Admin Console.</p>
+      <div class="stack-tags">
+        <span class="tag">Admin Console</span>
+        <span class="tag">Org units</span>
+        <span class="tag">Gmail</span>
+        <span class="tag">Drive</span>
+        <span class="tag">Provisioning</span>
+        <span class="tag">DNS & MX</span>
+      </div>
+    </div>
+
+    <div class="stack-card jamf">
+      <span class="stack-icon">Jamf Pro</span>
+      <h3>Mac Fleet<br>Management</h3>
+      <p>Deploying and managing macOS endpoints — enrollment profiles, policies, compliance checks, and software distribution.</p>
+      <div class="stack-tags">
+        <span class="tag">MDM</span>
+        <span class="tag">Enrollment</span>
+        <span class="tag">Policies</span>
+        <span class="tag">FileVault</span>
+        <span class="tag">Smart groups</span>
+        <span class="tag">Inventory</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Projects -->
+<section id="projects">
+  <div class="section-label">Projects</div>
+  <div class="project-list reveal">
+
+    <div class="project-item">
+      <div>
+        <div class="project-num">01</div>
+        <h3>Clarendon Advisory Group — Mock IT Environment</h3>
+        <p>End-to-end IT infrastructure for a fictitious 25-person consulting firm. Includes a live Google Workspace tenant, Okta developer org with SCIM provisioning, and a Jamf Pro Mac fleet — all integrated and documented as production-grade deployments.</p>
+        <div class="stack-tags" style="margin-top:1rem;">
+          <span class="tag">Jamf Pro</span>
+          <span class="tag">Okta</span>
+          <span class="tag">Google Workspace</span>
+          <span class="tag">SCIM</span>
+          <span class="tag">MDM</span>
+        </div>
+      </div>
+      <span class="project-badge badge-building">Building</span>
+    </div>
+
+    <div class="project-item">
+      <div>
+        <div class="project-num">02</div>
+        <h3>Mac Enrollment & Compliance Runbook</h3>
+        <p>Zero-touch Mac onboarding workflow using Jamf Pro — PreStage enrollment, configuration profiles, FileVault enforcement, and automated compliance reporting. Documented for a 3-device pilot.</p>
+        <div class="stack-tags" style="margin-top:1rem;">
+          <span class="tag">Jamf Pro</span>
+          <span class="tag">macOS</span>
+          <span class="tag">FileVault</span>
+          <span class="tag">PreStage</span>
+        </div>
+      </div>
+      <span class="project-badge badge-building">Building</span>
+    </div>
+
+    <div class="project-item">
+      <div>
+        <div class="project-num">03</div>
+        <h3>Okta → Google Workspace SCIM Integration</h3>
+        <p>Automated user lifecycle — provisioning, deprovisioning, and attribute sync between Okta and Google Workspace using SCIM 2.0. Includes group-based app assignment and MFA enrollment policies.</p>
+        <div class="stack-tags" style="margin-top:1rem;">
+          <span class="tag">Okta</span>
+          <span class="tag">SCIM 2.0</span>
+          <span class="tag">Google Workspace</span>
+          <span class="tag">Lifecycle</span>
+        </div>
+      </div>
+      <span class="project-badge badge-building">Building</span>
+    </div>
+
+    <div class="project-item">
+      <div>
+        <div class="project-num">04</div>
+        <h3>GWS Tenant Administration SOP</h3>
+        <p>Standard operating procedures for Google Workspace administration — org unit structure, user onboarding/offboarding, shared drive governance, and security baseline configuration.</p>
+        <div class="stack-tags" style="margin-top:1rem;">
+          <span class="tag">Google Workspace</span>
+          <span class="tag">Admin Console</span>
+          <span class="tag">Documentation</span>
+        </div>
+      </div>
+      <span class="project-badge badge-planned">Planned</span>
+    </div>
+
+  </div>
+</section>
+
+<!-- Experience -->
+<section id="experience">
+  <div class="section-label">Experience</div>
+  <div class="timeline">
+
+    <div class="timeline-item">
+      <div class="timeline-date">2023 — Present</div>
+      <h3>Network Infrastructure Support Specialist</h3>
+      <div class="timeline-company">Cook County Clerk's Office · Chicago, IL</div>
+      <ul>
+        <li>Supporting network infrastructure and end-user systems across a government environment</li>
+        <li>Managing Google Workspace administration and user lifecycle</li>
+        <li>Addigy Mac MDM deployment and policy management</li>
+        <li>Okta SSO configuration and identity governance</li>
+      </ul>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-date">Prior</div>
+      <h3>IT Support Engineer</h3>
+      <div class="timeline-company">Framework IT · Chicago, IL</div>
+      <ul>
+        <li>MSP environment supporting multiple client tenants</li>
+        <li>Microsoft 365 and Google Workspace administration</li>
+        <li>Meraki network management and troubleshooting</li>
+        <li>PowerShell automation for user provisioning workflows</li>
+      </ul>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-date">Prior</div>
+      <h3>IT Support Specialist</h3>
+      <div class="timeline-company">EMPIST · Chicago, IL</div>
+      <ul>
+        <li>End-user support and systems administration</li>
+        <li>SOC 2 and HIPAA compliance exposure</li>
+        <li>Intune MDM and endpoint management</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- Contact -->
+<section id="contact" class="contact-section">
+  <div class="contact-inner reveal">
+    <div>
+      <h2>Let's work<br><em>together.</em></h2>
+      <p>Open to IT Engineer, Mac Administrator, and Identity & Access roles in the Chicago area. Always happy to connect.</p>
+    </div>
+    <div class="contact-links">
+      <a href="mailto:ruben.lopez.it@outlook.com" class="contact-link">
+        <span class="contact-link-label">Email</span>
+        ruben.lopez.it@outlook.com
+        <span class="contact-link-arrow">→</span>
+      </a>
+      <a href="https://linkedin.com/in/rubenlopez" target="_blank" class="contact-link">
+        <span class="contact-link-label">LinkedIn</span>
+        linkedin.com/in/rubenlopez
+        <span class="contact-link-arrow">→</span>
+      </a>
+      <a href="https://github.com/rlopez-it" target="_blank" class="contact-link">
+        <span class="contact-link-label">GitHub</span>
+        github.com/rlopez-it
+        <span class="contact-link-arrow">→</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 Ruben Lopez · rlopez.dev</p>
+  <p>IT Systems Engineer · Chicago</p>
+</footer>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx + 'px';
+    cursor.style.top = my + 'px';
+  });
+
+  function animateRing() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal, .timeline-item');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
